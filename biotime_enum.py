@@ -7,6 +7,7 @@
 # Tested on 8.5.5 (Build:20231103.R1905)
 # Tested on 9.0.1 (Build:20240108.18753)
 # BioTime, "time" for shellz!
+# https://nvd.nist.gov/vuln/detail/cve-2024-13966
 # https://claroty.com/team82/disclosure-dashboard/cve-2023-38952
 # https://claroty.com/team82/disclosure-dashboard/cve-2023-38951
 # https://claroty.com/team82/disclosure-dashboard/cve-2023-38950
